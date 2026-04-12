@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# ==================== 函数：确保 Python 3.13 已安装 ====================
+ensure_python_3_13() {
+    local max_retry=5   # 最大重试次数，防止无限循环
+    local retry=0
+
+    while [ $retry -lt $max_retry ]; do
+        if command -v python >/dev/null 2>&1; then
+            # 已安装，检查版本
+            version=$(python --version 2>&1 | grep -oE '[0-9]+\.[0-9]+')
+            if [ "$version" = "3.13" ]; then
+                echo "✓ Python 3.13 已安装，继续执行..."
+                return 0
+            else
+                echo "当前 Python 版本为 $version，正在升级到 3.13 ..."
+                pkg update -y && pkg upgrade -y python
+            fi
+        else
+            echo "Python 未安装，正在安装..."
+            pkg update -y && pkg install -y python
+        fi
+
+        # 安装/升级后等待一秒，然后再次检查
+        sleep 1
+        retry=$((retry + 1))
+    done
+
+    echo "❌ 无法获取 Python 3.13，请检查软件源或手动安装。"
+    exit 1
+}
+
+# ==================== 主流程开始 ====================
+echo "请稍候，正在配置依赖..."
+echo
+
+# 1. 确保 Python 3.13
+ensure_python_3_13
+pip install requests tqdm colorama > /dev/null 2>&1
+echo
+echo "=================================================="
+echo "✅ 环境修复成功！"
+echo "✅ GCC 已就绪"
+echo "✅ 下次启动请输入野牛，不再需要输入bash 调试"
+echo
+echo "alias 野牛='./野牛'" >> ~/.bash_profile
+chmod 777 野牛
+chmod 777 ./野牛缓存/quickbms
+./野牛

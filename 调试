@@ -43,6 +43,6 @@ echo "✅ 环境修复成功！"
 echo "✅ GCC 已就绪"
 echo "✅ 下次启动请输入野牛，不再需要输入bash 调试"
 echo
-echo "alias 野牛='./野牛'" >> ~/.bash_profile
+echo "alias 野牛='./chen_zhe/野牛'" >> ~/.bash_profile
 chmod 777 野牛
 ./野牛
